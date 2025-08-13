@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Obtain an OpenID Connect ID token from GitHub
+      # Get an OpenID Connect ID token from GitHub
       - name: Get OIDC token
         id: oidc
         uses: actions/github-script@v6
@@ -33,7 +33,7 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           action: "upload"
-          app_location: "/"      # your index.html is in the repo root
+          app_location: "/"      # index.html in repo root
           api_location: ""       # no API
           output_location: ""    # no build output folder
           github_id_token: ${{ steps.oidc.outputs.result }}
