@@ -15,32 +15,22 @@ jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
+    name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v4
 
-      # Get an OpenID Connect ID token from GitHub
-      - name: Get OIDC token
-        id: oidc
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const core = require('@actions/core');
-            return await core.getIDToken();
-          result-encoding: string
-
-      # Deploy to Azure Static Web Apps using OIDC (no secrets)
-      - name: Deploy to Azure Static Web Apps (OIDC)
+      - name: Build and Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           action: "upload"
-          app_location: "/"      # index.html in repo root
+          app_location: "/"      # index.html at root
           api_location: ""       # no API
-          output_location: ""    # no build output folder
-          github_id_token: ${{ steps.oidc.outputs.result }}
+          output_location: ""    # no build folder
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
+    name: Close Pull Request Job
     steps:
       - uses: Azure/static-web-apps-deploy@v1
         with:
